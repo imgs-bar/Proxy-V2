@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>imgs.bar</title>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    {{ if .Image }}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta property="og:image" content="{{.FileURL}}" />
+    <meta property="og:description" content="{{.Desc}}" />
+    {{ else }}
+    <meta name="twitter:card" content="player" />
+    <meta name="twitter:player" content="{{.FileURL}}" />
+    {{ end }}
+    <meta name="theme-color" content="{{.Color}}" />
+    <link type="application/json+oembed" href="{{.OEmbedURL}}" />
+    <style>
+      @import url("https://fonts.googleapis.com/css?family=Roboto&display=swap");
+      body {
+        font-family: "Roboto", sans-serif;
+        background-color: #161616;
+        color: #eceff2;
+      }
+      h3 {
+        font-weight: 300;
+        font-size: 1.75rem;
+      }
+      h4 {
+        font-weight: 300;
+        font-size: 1.5rem;
+      }
+      #nav {
+        position: absolute;
+        top: 15px;
+        left: 20px;
+        font-size: 40;
+      }
+      .name {
+        color: white;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="nav">
+      <a href="https://imgs.bar" class="name">Back to imgs.bar</a>
+    </div>
+    <center>
+      <div class="vertical-center">
+        <h3>{{ .Name }} (<span class="info">{{ .OGName }}</span>)</h3>
+        {{ if .Image }}
+        <img
+          style="
+            -webkit-user-select: none;
+            margin: auto;
+            box-shadow: 0 0 5px rgb(0, 0, 0, 0.5);
+          "
+          src="{{.FileURL}}"
+        />
+        {{ else if .Video }}
+        <video
+          style="
+            -webkit-user-select: none;
+            margin: auto;
+            box-shadow: 0 0 5px rgb(0, 0, 0, 0.5);
+          "
+          controls
+          autoplay
+        >
+          <source src="{{ .FileURL }}" />
+          Your browser does not support watching videos.
+        </video>
+        {{ else }}
+        <button
+          onclick="window.location.href = '{{ .FileURL }}'"
+          style="
+            appearance: none;
+            background: white;
+            padding: 10px;
+            border: none;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            cursor: pointer;
+          "
+        >
+          Download
+        </button>
+        {{ end }}
+      </div>
+    </center>
+  </body>
+</html>
