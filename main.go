@@ -122,6 +122,6 @@ func setupHttp(){
 		
 	})
 
-	log.Fatal(app.Listen(":3000"))
+	log.Fatal(app.Listen(":" + os.Getenv("PORT")))
 }
 
