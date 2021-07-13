@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/url"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
@@ -51,38 +52,6 @@ func setupHttp(){
 		Views: engine,
 	})
 
-	app.Get("/:id",func(c *fiber.Ctx) error {
-		var file bson.M
-
-		fileName, err := url.PathUnescape(c.Params("id"))
-
-		if err != nil {
-			return err
-		}
-
-		fmt.Println(c.Params(fileName))
-
-		if err := dataBase.Collection("files").FindOne(context.TODO(), bson.M{"fileName": fileName}).Decode(&file); err != nil {
-			return c.Status(404).Render("404", nil)
-		}
-
-		fmt.Println(file)
-		mimeType:= strings.Split(file["mimeType"].(string), "/")[0]
-		cdnUrl:= os.Getenv("CDN_URL") + file["cdnFileName"].(string)
-		embed:= file["embed"].(primitive.M)
-
-		return c.Render("index", fiber.Map{
-			"Image": mimeType == "image",
-			"FileURL": cdnUrl,
-			"OEmbedURL": "https://" + c.Hostname() + "/json/" + fileName + ".json",
-			"Desc": embed["description"],
-			"Color": embed["color"],
-			"Name": file["fileName"],
-			"OGName": file["originalFileName"],
-			"Video": mimeType == "video",
-		})
-	})
-
 	app.Get("/json/:id",func(c *fiber.Ctx) error {
 		var file bson.M
 
@@ -96,13 +65,15 @@ func setupHttp(){
 			return c.Status(404).Render("404", nil)
 		}
 
-		fmt.Println(c.Params(fileName))
-
 		if err := dataBase.Collection("files").FindOne(context.TODO(), bson.M{"fileName": fileName}).Decode(&file); err != nil {
 			return c.Status(404).Render("404", nil)
 		}
 
 		embed:= file["embed"].(primitive.M)
+
+		if embed["author"] == nil {
+			return c.Status(404).Render("404", nil)
+		}
 
 		author:= embed["author"].(primitive.M)
 
@@ -122,6 +93,54 @@ func setupHttp(){
 		
 	})
 
+	app.Get("*",func(c *fiber.Ctx) error {
+		var file bson.M
+
+		fileName, err := url.PathUnescape(filepath.Base(c.Path()))
+		if err != nil {
+			return err
+		}
+
+		if err := dataBase.Collection("files").FindOne(context.TODO(), bson.M{"fileName": fileName}).Decode(&file); err != nil {
+			return c.Status(404).Render("404", nil)
+		}
+
+		mimeType:= strings.Split(file["mimeType"].(string), "/")[0]
+		cdnUrl:= os.Getenv("CDN_URL") + file["cdnFileName"].(string)
+		embed:= file["embed"].(primitive.M)
+
+		if embed["author"] == nil {
+			return c.Status(404).Render("404", nil)
+		}
+
+		return c.Render("index", fiber.Map{
+			"Embed": embed["enabled"].(bool),
+			"Image": mimeType == "image",
+			"FileURL": cdnUrl,
+			"OEmbedURL": "https://" + c.Hostname() + "/json/" + fileName + ".json",
+			"Desc": embed["description"],
+			"Color": embed["color"],
+			"Name": file["fileName"],
+			"OGName": file["originalFileName"],
+			"Video": mimeType == "video",
+			"Size": ByteCountSI(file["size"].(int32)),
+		})
+	})
+
+
 	log.Fatal(app.Listen(":" + os.Getenv("PORT")))
 }
 
+func ByteCountSI(b int32) string {
+    const unit = 1000
+    if b < unit {
+        return fmt.Sprintf("%d B", b)
+    }
+    div, exp := int64(unit), 0
+    for n := b / unit; n >= unit; n /= unit {
+        div *= unit
+        exp++
+    }
+    return fmt.Sprintf("%.1f %cB",
+        float64(b)/float64(div), "kMGTPE"[exp])
+}
