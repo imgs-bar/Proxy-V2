@@ -18,44 +18,61 @@
     {{ end }}
     <meta name="theme-color" content="{{.Color}}" />
     <link type="application/json+oembed" href="{{.OEmbedURL}}" />
+    <link href="https://fonts.googleapis.com/css2?family=Jost&display=swap" rel="stylesheet">
+
     {{ end }}
-    <style>
-      @import url("https://fonts.googleapis.com/css?family=Roboto&display=swap");
-      body {
-        font-family: "Roboto", sans-serif;
-        background-color: #161616;
-        color: #eceff2;
-      }
-      h3 {
-        font-weight: 300;
-        font-size: 1.75rem;
-      }
-      h4 {
-        font-weight: 300;
-        font-size: 1.5rem;
-      }
-      #nav {
-        position: absolute;
-        top: 15px;
-        left: 20px;
-        font-size: 40;
-      }
-      .name {
-        color: white;
-        text-decoration: none;
-      }
-      .info {
-        color: gray;
-      }
-    </style>
+  <style>
+    html,
+    head,
+    body {
+      background: #161616;
+    }
+  
+    .fileAuthor {
+      font-size: 1.3rem;
+      font-family: 'Jost', sans-serif;
+      color: #fff;
+      margin-top: 5px;
+    }
+  
+    .fileDesc {
+      color: #fff;
+      font-size: 1.1rem;
+      font-family: 'Jost', sans-serif;
+      margin-top: -20px;
+      margin-bottom: 5px;
+    }
+  
+    .fileSize {
+      color: #cfcfcf;
+    }
+  
+    .box {
+      background: #191919;
+      margin-left: 20%;
+      margin-right: 20%;
+      padding: 20px;
+      border-radius: 25px;
+    }
+  
+    .srcImg {
+      -webkit-user-select: none;
+      box-shadow: 0 0 5px rgb(0, 0, 0, 0.5);
+      max-width: 100%;
+      max-height: 30%;
+      width: auto;
+      height: auto;
+      border-radius: 12.5px;
+    }
+  </style>
   </head>
   <body>
     <div class="nav">
-      <a href="https://beta.imgs.bar" class="name">Return to beta</a>
+      <a class="fileDesc" href="https://beta.imgs.bar" class="name">Return to beta</a>
     </div>
     <center>
+      				<div class="box">
       <div class="vertical-center">
-        <h3 style="font-size: 2em">{{ .OGName }}</h3>
         {{ if .Image }}
         <img
           style="
@@ -64,6 +81,7 @@
             box-shadow: 0 0 5px rgb(0, 0, 0, 0.5);
           "
           src="{{.FileURL}}"
+          class="srcImg"
         />
         {{ else if .Video }}
         <video
@@ -94,7 +112,8 @@
           Download
         </button>
         {{ end }}
-        <h4>{{ .Name }} (<span class="info">{{ .Size }}</span>)</h4>
+        <h3 style="font-size: 2em" class="fileAuthor" >Uploaded by: <span class="fileAuthor">{{ .OGName }}</span></h3>
+        <h4 class="fileDesc">{{ .Name }} (<span class="fileSize">{{ .Size }}</span>)</h4>
       </div>
     </center>
   </body>
