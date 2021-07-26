@@ -18,14 +18,42 @@
     {{ end }}
     <meta name="theme-color" content="{{.Color}}" />
     <link type="application/json+oembed" href="{{.OEmbedURL}}" />
+    {{ end }}
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap"
       rel="stylesheet"
     />
+    <script
+      src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      window.onload = function () {
+        twemoji.parse(document.getElementById("text"), {
+          folder: "svg",
+          ext: ".svg",
+          callback: function (iconId, options) {
+            switch (iconId) {
+              case "a9":
+              case "ae":
+              case "2122":
+                return false;
+            }
+            return "".concat(
+              options.base,
+              options.size,
+              "/",
+              iconId,
+              options.ext
+            );
+          },
+        });
+      };
+    </script>
 
-    {{ end }}
     <style>
       html,
       head,
@@ -33,7 +61,12 @@
         background: #161616;
         font-family: "Open Sans", sans-serif;
       }
-
+      img.emoji {
+        height: 1em;
+        width: 1em;
+        margin: 0 0.05em 0 0.1em;
+        vertical-align: -0.1em;
+      }
       .fileAuthor {
         color: #fff;
         font-size: 1rem;
@@ -121,12 +154,14 @@
           </button>
           {{ end }}
 
-          <h2 class="fileDesc">
-            {{ .Name }} (<span class="fileSize">{{ .Size }}</span>)
-          </h2>
-          <h3 class="fileAuthor">
-            Uploaded by: <span class="fileAuthor">{{ .Uploader }}</span>
-          </h3>
+          <div id="text">
+            <h2 class="fileDesc">
+              🐈🐈 {{ .Name }} (<span class="fileSize">{{ .Size }}</span>)
+            </h2>
+            <h3 class="fileAuthor">
+              Uploaded by: <span class="fileAuthor">{{ .Uploader }}</span>
+            </h3>
+          </div>
         </div>
       </div>
     </center>
