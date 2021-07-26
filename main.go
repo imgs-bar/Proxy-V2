@@ -109,7 +109,7 @@ func setupHttp(){
 		mimeType:= strings.Split(file["mimeType"].(string), "/")[0]
 		cdnUrl:= os.Getenv("CDN_URL") + file["cdnFileName"].(string)
 		embed:= file["embed"].(primitive.M)
-		uploader:= embed["uploader"].(primitive.M)
+		uploader:= file["uploader"].(primitive.M)
 
 		// Embed breaks sometimes, just return 404 
 		if embed["author"] == nil {
