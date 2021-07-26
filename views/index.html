@@ -18,102 +18,116 @@
     {{ end }}
     <meta name="theme-color" content="{{.Color}}" />
     <link type="application/json+oembed" href="{{.OEmbedURL}}" />
-    <link href="https://fonts.googleapis.com/css2?family=Jost&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap"
+      rel="stylesheet"
+    />
 
     {{ end }}
-  <style>
-    html,
-    head,
-    body {
-      background: #161616;
-    }
-  
-    .fileAuthor {
-      font-size: 1.3rem;
-      font-family: 'Jost', sans-serif;
-      color: #fff;
-      margin-top: 5px;
-    }
-  
-    .fileDesc {
-      color: #fff;
-      font-size: 1.1rem;
-      font-family: 'Jost', sans-serif;
-      margin-top: -20px;
-      margin-bottom: 5px;
-    }
-  
-    .fileSize {
-      color: #cfcfcf;
-    }
-  
-    .box {
-      background: #191919;
-      margin-left: 20%;
-      margin-right: 20%;
-      padding: 20px;
-      border-radius: 25px;
-    }
-  
-    .srcImg {
-      -webkit-user-select: none;
-      box-shadow: 0 0 5px rgb(0, 0, 0, 0.5);
-      max-width: 100%;
-      max-height: 30%;
-      width: auto;
-      height: auto;
-      border-radius: 12.5px;
-    }
-  </style>
+    <style>
+      html,
+      head,
+      body {
+        background: #161616;
+        font-family: "Open Sans", sans-serif;
+      }
+
+      .fileAuthor {
+        color: #fff;
+        font-size: 1rem;
+        margin-top: 5px;
+      }
+
+      .fileDesc {
+        color: #fff;
+        font-size: 1.4rem;
+        margin-top: -20px;
+        margin-bottom: 5px;
+      }
+
+      .fileSize {
+        color: #cfcfcf;
+      }
+
+      .box {
+        background: #191919;
+        margin-left: 20%;
+        margin-right: 20%;
+        padding: 20px;
+        border-radius: 25px;
+      }
+
+      .srcImg {
+        -webkit-user-select: none;
+        box-shadow: 0 0 5px rgb(0, 0, 0, 0.5);
+        max-width: 100%;
+        max-height: 30%;
+        width: auto;
+        height: auto;
+        border-radius: 12.5px;
+      }
+    </style>
   </head>
   <body>
     <div class="nav">
-      <a class="fileDesc" href="https://beta.imgs.bar" class="name">Return to beta</a>
+      <a class="fileDesc" href="https://beta.imgs.bar" class="name"
+        >Return to beta</a
+      >
     </div>
     <center>
-      				<div class="box">
-      <div class="vertical-center">
-        {{ if .Image }}
-        <img
-          style="
-            -webkit-user-select: none;
-            margin: auto;
-            box-shadow: 0 0 5px rgb(0, 0, 0, 0.5);
-          "
-          src="{{.FileURL}}"
-          class="srcImg"
-        />
-        {{ else if .Video }}
-        <video
-          style="
-            -webkit-user-select: none;
-            margin: auto;
-            box-shadow: 0 0 5px rgb(0, 0, 0, 0.5);
-          "
-          controls
-          autoplay
-        >
-          <source src="{{ .FileURL }}" />
-          Your browser does not support watching videos.
-        </video>
-        {{ else }}
-        <button
-          onclick="window.location.href = '{{ .FileURL }}'"
-          style="
-            appearance: none;
-            background: white;
-            padding: 10px;
-            border: none;
-            border-radius: 50px;
-            font-size: 0.9rem;
-            cursor: pointer;
-          "
-        >
-          Download
-        </button>
-        {{ end }}
-        <h3 style="font-size: 2em" class="fileAuthor" >Uploaded by: <span class="fileAuthor">{{ .OGName }}</span></h3>
-        <h4 class="fileDesc">{{ .Name }} (<span class="fileSize">{{ .Size }}</span>)</h4>
+      <div class="box">
+        <div class="vertical-center">
+          <h4 class="fileDesc">{{ .OGName }}</h4>
+
+          {{ if .Image }}
+          <img
+            style="
+              -webkit-user-select: none;
+              margin: auto;
+              box-shadow: 0 0 5px rgb(0, 0, 0, 0.5);
+            "
+            src="{{.FileURL}}"
+            class="srcImg"
+          />
+          {{ else if .Video }}
+          <video
+            style="
+              -webkit-user-select: none;
+              margin: auto;
+              box-shadow: 0 0 5px rgb(0, 0, 0, 0.5);
+            "
+            controls
+            autoplay
+          >
+            <source src="{{ .FileURL }}" />
+            Your browser does not support watching videos.
+          </video>
+          {{ else }}
+          <button
+            onclick="window.location.href = '{{ .FileURL }}'"
+            style="
+              appearance: none;
+              background: white;
+              padding: 10px;
+              border: none;
+              border-radius: 50px;
+              font-size: 0.9rem;
+              cursor: pointer;
+            "
+          >
+            Download
+          </button>
+          {{ end }}
+
+          <h2 class="fileDesc">
+            {{ .Name }} (<span class="fileSize">{{ .Size }}</span>)
+          </h2>
+          <h3 class="fileAuthor">
+            Uploaded by: <span class="fileAuthor">{{ .Uploader }}</span>
+          </h3>
+        </div>
       </div>
     </center>
   </body>

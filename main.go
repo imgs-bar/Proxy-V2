@@ -88,6 +88,7 @@ func setupHttp(){
 			"author_url": author["url"],
 			"provider_name": header["text"],
 			"provider_url": header["url"],
+			"cache_age": "0",
 		})
 		
 		
@@ -108,7 +109,9 @@ func setupHttp(){
 		mimeType:= strings.Split(file["mimeType"].(string), "/")[0]
 		cdnUrl:= os.Getenv("CDN_URL") + file["cdnFileName"].(string)
 		embed:= file["embed"].(primitive.M)
+		uploader:= embed["uploader"].(primitive.M)
 
+		// Embed breaks sometimes, just return 404 
 		if embed["author"] == nil {
 			return c.Status(404).Render("404", nil)
 		}
@@ -124,6 +127,7 @@ func setupHttp(){
 			"OGName": file["originalFileName"],
 			"Video": mimeType == "video",
 			"Size": ByteCountSI(file["size"].(int32)),
+			"Uploader": uploader["name"],
 		})
 	})
 
